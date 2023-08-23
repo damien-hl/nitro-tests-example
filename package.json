@@ -8,14 +8,14 @@
     "test": "vitest"
   },
   "dependencies": {
-    "listhen": "^1.4.0",
-    "nitropack": "latest",
-    "ofetch": "^1.2.1",
-    "pathe": "^1.1.1",
-    "ufo": "^1.2.0"
+    "nitropack": "latest"
   },
   "devDependencies": {
     "defu": "^6.1.2",
+    "listhen": "^1.4.0",
+    "ofetch": "^1.2.1",
+    "pathe": "^1.1.1",
+    "ufo": "^1.2.0",
     "vitest": "^0.34.2"
   }
 }
