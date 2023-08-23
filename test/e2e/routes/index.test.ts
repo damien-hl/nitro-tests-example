@@ -1,4 +1,4 @@
-import { setupTests } from "../tests";
+import { setupTests } from "../../tests";
 import { describe, expect, test } from "vitest";
 
 describe("index route", async () => {

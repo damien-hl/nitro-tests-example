@@ -1,10 +1,10 @@
 import { defu } from "defu";
+import { joinURL } from "ufo";
 import { fetch } from "ofetch";
 import { resolve } from "pathe";
 import { afterAll } from "vitest";
 import { Listener, listen } from "listhen";
 import { type NitroConfig, type Nitro, createNitro, prepare, build } from "nitropack";
-import { joinURL } from "ufo";
 
 // This context is used to keep track of the Nitro instance, the server
 // running in the background and some other useful information and utilities.
