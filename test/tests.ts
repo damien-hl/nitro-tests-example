@@ -3,8 +3,8 @@ import { joinURL } from "ufo";
 import { fetch } from "ofetch";
 import { resolve } from "pathe";
 import { afterAll } from "vitest";
-import { Listener, listen } from "listhen";
-import { type NitroConfig, type Nitro, createNitro, prepare, build } from "nitropack";
+import { type Listener } from "listhen";
+import { type NitroConfig, type Nitro, createNitro, prepare, build, createDevServer } from "nitropack";
 
 // This context is used to keep track of the Nitro instance, the server
 // running in the background and some other useful information and utilities.
@@ -31,24 +31,28 @@ export const setupTests = async (options: { nitroConfig?: NitroConfig } = {}) =>
 
     ctx.nitro = await createNitro(
         defu(options.nitroConfig, {
+            dev: true,
             output: {
                 dir: ctx.outDir,
             },
-            preset: "node"
+            preset: "nitro-dev"
         } satisfies NitroConfig),
     );
+
+    const ready = (nitro: Nitro) => new Promise<void>((resolve) => {
+        nitro.hooks.hook("dev:reload", () => resolve());
+    });
+
+    // Start the server.
+    const devServer = createDevServer(ctx.nitro);
+    ctx.listener = await devServer.listen({});
 
     // Ensure the output directory exists and is empty.
     await prepare(ctx.nitro);
     // Build the app.
     await build(ctx.nitro);
-
-    // Import the server entry point.
-    const entryPath = resolve(ctx.outDir, "server/index.mjs");
-    const { listener } = await import(entryPath);
-
-    // Start the server and keep track of the listener.
-    ctx.listener = await listen(listener);
+    // Wait for the app to be ready.
+    await ready(ctx.nitro);
 
     afterAll(async () => {
         // Close the server and the Nitro instance.
